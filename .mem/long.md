@@ -9,6 +9,7 @@
 - [stack] Python CLI
 - [libs] OpenCV (opencv-python), NumPy, Pillow (PIL), Wand (ImageMagick)
 - [output] variants auto-organized into a structured folder layout as created
+- [output-layout] APPROVED: output/<source-name>/<technique>/<source-name>_<tag>.png; threshold tag = t### (zero-padded threshold value)
 
 ## gotchas
-- [git] cwd is NOT a git repo; .mem/ rooted at project dir /Users/briangildea/things/myc/image-wormhole
+- [py] system Python is 3.14 (no reliable opencv-python wheels); project venv pinned to 3.12 via .python-version. Use `uv run`, never system python.
