@@ -10,6 +10,7 @@
 - [libs] OpenCV (opencv-python), NumPy, Pillow (PIL), Wand (ImageMagick)
 - [output] variants auto-organized into a structured folder layout as created
 - [output-layout] APPROVED: output/<source-name>/<technique>/<source-name>_<tag>.png; threshold tag = t### (zero-padded threshold value)
+- [output-layout-chained] SECONDARY ops (operate on existing variants, e.g. extract) write to a sibling <technique>/ folder NEXT TO their inputs (keeps a batch grouped for review), not a fresh output/<source>/ tree. Entry ops (threshold) create output/<source>/<technique>/.
 
 ## decisions
 - [picker] iterfzf chosen for CLI picker (bundles fzf binary, pip-installable — no system fzf needed). Text-only, no image thumbnails → pair with an external viewer for eyeballing variants.

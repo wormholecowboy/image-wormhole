@@ -38,7 +38,12 @@ Uninstall with `uv tool uninstall image-wormhole`.
 ```bash
 wormhole --help
 wormhole threshold path/to/photo.jpg      # 20 binary-threshold variants
+wormhole extract output/photo/threshold/  # keep black/white as transparent PNGs
 ```
+
+`extract` takes a thresholded image or a folder of them and writes RGBA PNGs
+(kept side opaque, other side transparent) into an `extract/` folder beside the
+inputs. `--keep black|white|both` (default both).
 
 Variants are written under `output/` **relative to the current directory**, so
 run `wormhole` inside the folder you want the results in.
