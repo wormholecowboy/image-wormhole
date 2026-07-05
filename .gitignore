@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# venv / uv
+.venv/
+
+# macOS
+.DS_Store
+
+# Generated variant output (image processing results)
+output/
+out/
+
+# Editor
+.vscode/
+.idea/
