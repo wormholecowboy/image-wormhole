@@ -13,6 +13,7 @@
 
 ## decisions
 - [picker] iterfzf chosen for CLI picker (bundles fzf binary, pip-installable — no system fzf needed). Text-only, no image thumbnails → pair with an external viewer for eyeballing variants.
+- [deploy] installed system-wide via `uv tool install --editable .` → shim at ~/.local/bin/wormhole (on PATH). Editable: new subcommands live immediately; NEW DEPS need `uv tool upgrade image-wormhole`. Output dir is relative to cwd. Uninstall: `uv tool uninstall image-wormhole`.
 
 ## gotchas
 - [py] system Python is 3.14 (no reliable opencv-python wheels); project venv pinned to 3.12 via .python-version. Use `uv run`, never system python.

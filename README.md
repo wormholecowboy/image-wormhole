@@ -21,11 +21,29 @@ Requires [uv](https://docs.astral.sh/uv/). The project pins Python 3.12.
 uv sync
 ```
 
+## Install (use anywhere)
+
+Install as a system-wide command at `~/.local/bin/wormhole` (editable, so new
+subcommands appear without reinstalling):
+
+```bash
+uv tool install --editable .
+```
+
+After adding a new dependency, resync the tool: `uv tool upgrade image-wormhole`.
+Uninstall with `uv tool uninstall image-wormhole`.
+
 ## Usage
 
 ```bash
-uv run wormhole --help
+wormhole --help
+wormhole threshold path/to/photo.jpg      # 20 binary-threshold variants
 ```
+
+Variants are written under `output/` **relative to the current directory**, so
+run `wormhole` inside the folder you want the results in.
+
+During local development you can also run without installing: `uv run wormhole ...`.
 
 ## Stack
 
