@@ -8,6 +8,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from image_wormhole.image_io import ensure_readable
 from image_wormhole.paths import variant_path
 
 TECHNIQUE = "threshold"
@@ -37,7 +38,12 @@ def run(args: argparse.Namespace) -> int:
         print(f"error: no such file: {src}")
         return 1
 
-    gray = cv2.imread(str(src), cv2.IMREAD_GRAYSCALE)
+    readable = ensure_readable(src)
+    if readable is None:
+        print(f"error: could not convert image: {src}")
+        return 1
+
+    gray = cv2.imread(str(readable), cv2.IMREAD_GRAYSCALE)
     if gray is None:
         print(f"error: could not read image: {src}")
         return 1
@@ -77,7 +83,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         help="high end of threshold range, exclusive (default 255)",
     )
     p.add_argument(
-        "-o", "--out", default="output",
-        help="output root dir (default output/)",
+        "-o", "--out", default="iw",
+        help="output root dir (default iw/)",
     )
     p.set_defaults(func=run)

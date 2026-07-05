@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-wormhole = "image_wormhole.cli:main"
+iw = "image_wormhole.cli:main"
 
 [build-system]
 requires = ["hatchling"]

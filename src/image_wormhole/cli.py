@@ -14,7 +14,7 @@ from image_wormhole.ops import threshold as threshold_op
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="wormhole",
+        prog="iw",
         description="Batch-process photos into graphic-art variants.",
     )
     parser.add_argument(

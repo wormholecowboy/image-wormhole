@@ -9,8 +9,9 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from image_wormhole.image_io import IMAGE_EXTS, ensure_readable
+
 TECHNIQUE = "extract"
-IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".webp"}
 MIDPOINT = 128  # pixels >= midpoint are treated as "white"
 
 
@@ -58,7 +59,11 @@ def run(args: argparse.Namespace) -> int:
     written = 0
     dests: set[Path] = set()
     for src in inputs:
-        gray = cv2.imread(str(src), cv2.IMREAD_GRAYSCALE)
+        readable = ensure_readable(src)
+        if readable is None:
+            print(f"skip: could not convert {src}")
+            continue
+        gray = cv2.imread(str(readable), cv2.IMREAD_GRAYSCALE)
         if gray is None:
             print(f"skip: could not read {src}")
             continue
