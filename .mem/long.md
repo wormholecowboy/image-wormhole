@@ -11,5 +11,8 @@
 - [output] variants auto-organized into a structured folder layout as created
 - [output-layout] APPROVED: output/<source-name>/<technique>/<source-name>_<tag>.png; threshold tag = t### (zero-padded threshold value)
 
+## decisions
+- [picker] iterfzf chosen for CLI picker (bundles fzf binary, pip-installable — no system fzf needed). Text-only, no image thumbnails → pair with an external viewer for eyeballing variants.
+
 ## gotchas
 - [py] system Python is 3.14 (no reliable opencv-python wheels); project venv pinned to 3.12 via .python-version. Use `uv run`, never system python.

@@ -32,6 +32,12 @@ composited. Build iteratively, minimal upfront planning.
    reorder by hue / saturation / brightness. Controlled digital artifacts:
    melting, bleeding, liquid dragging textures. → NumPy array ops
 
+## Backlog — Review / Picker
+9. **`pick` command** — fzf-style picker to browse/select generated variants from
+   the CLI. Use **iterfzf** (bundles the fzf binary, pip-installable). Text-only
+   (no thumbnails) → pair with an external image viewer to eyeball variants
+   before dragging into Affinity.
+
 ## Libraries
 - **OpenCV (opencv-python)** — core CV engine: adaptive threshold, Canny,
   contour tracing, distance transforms. High-performance native algorithms.
