@@ -23,7 +23,7 @@ uv sync
 
 ## Install (use anywhere)
 
-Install as a system-wide command at `~/.local/bin/wormhole` (editable, so new
+Install as a system-wide command at `~/.local/bin/iw` (editable, so new
 subcommands appear without reinstalling):
 
 ```bash
@@ -38,8 +38,15 @@ Uninstall with `uv tool uninstall image-wormhole`.
 ```bash
 iw --help
 iw threshold path/to/photo.jpg      # 20 binary-threshold variants
+iw adaptive path/to/photo.jpg       # grid of local adaptive-threshold variants
 iw extract iw/photo/threshold/      # keep black/white as transparent PNGs
 ```
+
+`adaptive` thresholds each pixel against its local neighborhood instead of one
+global value, so uneven lighting is stripped and micro-texture / granular detail
+survives. It sweeps a grid over `--block` (neighborhood size, odd & >=3) and
+`-C/--const` (constant subtracted from the local mean), one variant per pair.
+`--method gaussian|mean` (default gaussian), `--invert` for black-on-white.
 
 `extract` takes a thresholded image or a folder of them and writes RGBA PNGs
 (kept side opaque, other side transparent) into an `extract/` folder beside the

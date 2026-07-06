@@ -17,8 +17,9 @@
 - [heic] HEIC/HEIF support = implicit conversion (not native decode, not a `convert` subcommand). Ops route source through image_io.ensure_readable() before cv2.imread; passes non-HEIC through, converts HEIC→PNG via macOS `sips` into a temp cache (reused). Original stem/parent preserved for output naming. src/image_wormhole/image_io.py owns HEIC_EXTS + shared IMAGE_EXTS.
 
 ## deploy
-- [deploy] install per-machine via `uv tool install --editable .` → shim at ~/.local/bin/iw (a launcher script, NOT a compiled binary; runs the entry point in a uv-managed venv). MUST be run once on EACH machine. Editable: code edits live immediately; only NEW DEPS need `uv tool upgrade image-wormhole`. Output dir relative to cwd. Uninstall: `uv tool uninstall image-wormhole`.
-- [deploy-state] shim INSTALLED on current machine (git user wormholecowboy) as of 2026-07-05. Other machine: install separately when used.
+- [deploy] install per-machine via `uv tool install --editable .` → shim at ~/.local/bin/iw (a launcher script, NOT a compiled binary; runs the entry point in a uv-managed venv). MUST be run once on EACH machine. Editable: CODE edits live immediately, but RENAMING the console-script (pyproject `[project.scripts]`) does NOT — the old executable name persists until `uv tool install --force` (or upgrade). Only NEW DEPS also need resync. Output dir relative to cwd. Uninstall: `uv tool uninstall image-wormhole`.
+- [deploy-gotcha] wormhole→iw rename: tool kept exposing old `wormhole` executable; `iw` was never created until `uv tool install --editable . --force` on 2026-07-05 (2nd time). Verify a script rename with `uv tool list` (shows exposed executables) after reinstall.
+- [deploy-state] `iw` shim CONFIRMED installed+on-PATH on current machine (git user wormholecowboy) as of 2026-07-05 after --force reinstall. ~/.local/bin already on PATH. Other machine: install separately when used.
 
 ## gotchas
 - [py] system Python is 3.14 (no reliable opencv-python wheels); project venv pinned to 3.12 via .python-version. Use `uv run`, never system python.

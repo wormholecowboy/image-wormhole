@@ -14,10 +14,11 @@ composited. Build iteratively, minimal upfront planning.
    structured folder layout as they are created (critical for review workflow).
 
 ## Backlog — Creative Processing Techniques
-4. **Adaptive Thresholding** — evaluate pixel brightness relative to small local
-   neighborhoods. Strips global shadows / uneven lighting to isolate flat,
-   high-contrast micro-textures and granular surface detail.
-   → `cv2.adaptiveThreshold`
+4. **Adaptive Thresholding** — ✅ DONE (`iw adaptive`). Evaluate pixel brightness
+   relative to small local neighborhoods. Strips global shadows / uneven lighting
+   to isolate flat, high-contrast micro-textures and granular surface detail.
+   → `cv2.adaptiveThreshold`. Sweeps a block×C grid; --method gaussian|mean,
+   --invert.
 5. **Canny Edge Detection** — infer sharp structural gradients, compress to clean
    single-pixel-wide lines. Strips color + texture → geometric, blueprint-like
    skeleton. → `cv2.Canny`

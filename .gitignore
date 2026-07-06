@@ -12,8 +12,12 @@ __pycache__/
 .DS_Store
 
 # Generated variant output (image processing results)
+iw/
 output/
 out/
+
+# Scratch / test inputs
+temp/
 
 # Editor
 .vscode/
