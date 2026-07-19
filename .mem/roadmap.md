@@ -7,11 +7,13 @@ composited. Build iteratively, minimal upfront planning.
 
 ## Now (first build)
 1. **Threshold sweep** — apply binary threshold at ~20 threshold points across an
-   image; emit one variant per threshold level.
-2. **Black/White extractor** — from a thresholded image, extract only the black
-   region OR only the white region (isolate one side of the binary result).
+   image; emit one variant per threshold level. ✅ DONE. Auto-extracts both transparent RGBA
+   mattes (black + white) by default (2026-07-19).
+2. **Black/White extractor** — ✅ DONE (folded into threshold). Threshold now auto-extracts
+   both black + white transparent RGBA mattes into <stem>/threshold/. Standalone `extract`
+   command removed; logic lives in extract.py (to_rgba).
 3. **Folder organization** — auto-organize all generated variants into a
-   structured folder layout as they are created (critical for review workflow).
+   structured folder layout as they are created (critical for review workflow). ✅ DONE.
 
 ## Backlog — Creative Processing Techniques
 4. **Adaptive Thresholding** — ✅ DONE (`iw adaptive`). Evaluate pixel brightness

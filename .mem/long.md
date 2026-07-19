@@ -9,12 +9,13 @@
 - [stack] Python CLI
 - [libs] OpenCV (opencv-python), NumPy, Pillow (PIL), Wand (ImageMagick)
 - [output] variants auto-organized into a structured folder layout as created
-- [output-layout] APPROVED: iw/<source-name>/<technique>/<source-name>_<tag>.png; threshold tag = t### (zero-padded threshold value). Default out root renamed output/→iw/ 2026-07-05.
-- [output-layout-chained] SECONDARY ops (operate on existing variants, e.g. extract) write to a sibling <technique>/ folder NEXT TO their inputs (keeps a batch grouped for review), not a fresh iw/<source>/ tree. Entry ops (threshold) create iw/<source>/<technique>/.
+- [output-layout] <source-stem>/<technique>/<stem>_<tag>.png; threshold tag = t### (zero-padded threshold value). Default out_root = "." (cwd, not "iw/") since 2026-07-19. No iw/ prefix.
+- [arch] Extraction is now DEFAULT post-step of threshold (not a standalone command). Writes both black+white transparent RGBA mattes automatically. Shared logic in src/image_wormhole/extract.py (to_rgba). adaptive still emits OPAQUE binary — auto-extract scoped to threshold only; extend to adaptive is a candidate.
+- [arch] Shared pre-processing pattern: src/image_wormhole/preprocess.py holds cross-op flags (blur now) applied to gray right after load; each op calls add_blur_arg(p) in add_parser and apply_blur/blur_tag in run. Home for future shared pre-steps.
 
 ## decisions
 - [picker] iterfzf chosen for CLI picker (bundles fzf binary, pip-installable — no system fzf needed). Text-only, no image thumbnails → pair with an external viewer for eyeballing variants.
-- [heic] HEIC/HEIF support = implicit conversion (not native decode, not a `convert` subcommand). Ops route source through image_io.ensure_readable() before cv2.imread; passes non-HEIC through, converts HEIC→PNG via macOS `sips` into a temp cache (reused). Original stem/parent preserved for output naming. src/image_wormhole/image_io.py owns HEIC_EXTS + shared IMAGE_EXTS.
+- [heic] HEIC/HEIF support = implicit conversion (not native decode, not a `convert` subcommand). Ops route source through image_io.ensure_readable() before cv2.imread; passes non-HEIC through, converts HEIC→PNG via macOS `sips` into a temp cache (reused). Original stem/parent preserved for output naming. src/image_wormhole/image_io.py owns HEIC_EXTS + shared IMAGE_EXTS. (threshold + adaptive route src through ensure_readable.)
 
 ## deploy
 - [deploy] install per-machine via `uv tool install --editable .` → shim at ~/.local/bin/iw (a launcher script, NOT a compiled binary; runs the entry point in a uv-managed venv). MUST be run once on EACH machine. Editable: CODE edits live immediately, but RENAMING the console-script (pyproject `[project.scripts]`) does NOT — the old executable name persists until `uv tool install --force` (or upgrade). Only NEW DEPS also need resync. Output dir relative to cwd. Uninstall: `uv tool uninstall image-wormhole`.

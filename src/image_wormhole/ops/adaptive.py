@@ -21,6 +21,7 @@ import numpy as np
 
 from image_wormhole.image_io import ensure_readable
 from image_wormhole.paths import variant_path
+from image_wormhole.preprocess import add_blur_arg, apply_blur, blur_tag
 
 TECHNIQUE = "adaptive"
 
@@ -80,6 +81,9 @@ def run(args: argparse.Namespace) -> int:
         print(f"error: could not read image: {src}")
         return 1
 
+    gray = apply_blur(gray, args.blur)
+    btag = blur_tag(args.blur)
+
     blocks = block_sizes(args.block)
     cs = sorted({int(c) for c in args.const})
     if not blocks or not cs:
@@ -90,7 +94,7 @@ def run(args: argparse.Namespace) -> int:
     written = 0
     for block in blocks:
         for c in cs:
-            tag = variant_tag(args.method, block, c, args.invert)
+            tag = variant_tag(args.method, block, c, args.invert) + btag
             path = variant_path(src, TECHNIQUE, tag, out_root=args.out)
             out_dir = path.parent
             cv2.imwrite(str(path), apply_adaptive(gray, args.method, block, c, args.invert))
@@ -111,7 +115,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     )
     p.add_argument("image", help="source image path")
     p.add_argument(
-        "-b", "--block", type=int, nargs="+", default=[3, 7, 15, 31, 51],
+        "-k", "--block", type=int, nargs="+", default=[3, 7, 15, 31, 51],
         metavar="N",
         help="neighborhood block size(s), odd & >=3; even values are bumped up "
         "(default: 3 7 15 31 51)",
@@ -131,7 +135,8 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         help="invert output: foreground black on white",
     )
     p.add_argument(
-        "-o", "--out", default="iw",
-        help="output root dir (default iw/)",
+        "-o", "--out", default=".",
+        help="output root dir (default: current dir)",
     )
+    add_blur_arg(p)
     p.set_defaults(func=run)

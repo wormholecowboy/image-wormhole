@@ -9,7 +9,6 @@ import argparse
 
 from image_wormhole import __version__
 from image_wormhole.ops import adaptive as adaptive_op
-from image_wormhole.ops import extract as extract_op
 from image_wormhole.ops import threshold as threshold_op
 
 
@@ -27,7 +26,6 @@ def build_parser() -> argparse.ArgumentParser:
     # Each feature registers its own subcommand here.
     threshold_op.add_parser(subparsers)
     adaptive_op.add_parser(subparsers)
-    extract_op.add_parser(subparsers)
     return parser
 
 

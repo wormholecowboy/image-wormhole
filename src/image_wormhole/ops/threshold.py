@@ -8,8 +8,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from image_wormhole.extract import SIDES, to_rgba
 from image_wormhole.image_io import ensure_readable
 from image_wormhole.paths import variant_path
+from image_wormhole.preprocess import add_blur_arg, apply_blur, blur_tag
 
 TECHNIQUE = "threshold"
 
@@ -48,18 +50,27 @@ def run(args: argparse.Namespace) -> int:
         print(f"error: could not read image: {src}")
         return 1
 
+    gray = apply_blur(gray, args.blur)
+    btag = blur_tag(args.blur)
+
     values = threshold_values(args.count, args.min, args.max)
     if not values:
         print("error: no threshold values to apply (check --count/--min/--max)")
         return 1
 
     out_dir: Path | None = None
+    written = 0
     for v in values:
-        path = variant_path(src, TECHNIQUE, f"t{v:03d}", out_root=args.out)
-        out_dir = path.parent
-        cv2.imwrite(str(path), apply_threshold(gray, v))
+        binary = apply_threshold(gray, v)
+        # Emit both transparent mattes per threshold: black kept, white kept.
+        for side in SIDES:
+            tag = f"t{v:03d}_{side}{btag}"
+            path = variant_path(src, TECHNIQUE, tag, out_root=args.out)
+            out_dir = path.parent
+            cv2.imwrite(str(path), to_rgba(binary, side))
+            written += 1
 
-    print(f"wrote {len(values)} threshold variants -> {out_dir}")
+    print(f"wrote {written} threshold variants -> {out_dir}")
     return 0
 
 
@@ -67,7 +78,9 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     p = subparsers.add_parser(
         TECHNIQUE,
         help="sweep a binary threshold across N points",
-        description="Emit N binary-threshold variants of a source image.",
+        description="Sweep a binary threshold across N points. Each threshold "
+        "emits two transparent RGBA mattes — one keeping the black pixels, one "
+        "keeping the white — ready to composite.",
     )
     p.add_argument("image", help="source image path")
     p.add_argument(
@@ -83,7 +96,8 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         help="high end of threshold range, exclusive (default 255)",
     )
     p.add_argument(
-        "-o", "--out", default="iw",
-        help="output root dir (default iw/)",
+        "-o", "--out", default=".",
+        help="output root dir (default: current dir)",
     )
+    add_blur_arg(p)
     p.set_defaults(func=run)
