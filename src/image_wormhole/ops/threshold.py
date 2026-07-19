@@ -58,12 +58,13 @@ def run(args: argparse.Namespace) -> int:
         print("error: no threshold values to apply (check --count/--min/--max)")
         return 1
 
+    sides = SIDES if args.keep == "both" else (args.keep,)
+
     out_dir: Path | None = None
     written = 0
     for v in values:
         binary = apply_threshold(gray, v)
-        # Emit both transparent mattes per threshold: black kept, white kept.
-        for side in SIDES:
+        for side in sides:
             tag = f"t{v:03d}_{side}{btag}"
             path = variant_path(src, TECHNIQUE, tag, out_root=args.out)
             out_dir = path.parent
@@ -79,8 +80,9 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         TECHNIQUE,
         help="sweep a binary threshold across N points",
         description="Sweep a binary threshold across N points. Each threshold "
-        "emits two transparent RGBA mattes — one keeping the black pixels, one "
-        "keeping the white — ready to composite.",
+        "emits a transparent RGBA matte (kept side opaque, other transparent), "
+        "ready to composite. Defaults to the black side; the white matte is its "
+        "exact inverse — use --keep to change or get both.",
     )
     p.add_argument("image", help="source image path")
     p.add_argument(
@@ -94,6 +96,11 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     p.add_argument(
         "--max", type=int, default=255,
         help="high end of threshold range, exclusive (default 255)",
+    )
+    p.add_argument(
+        "--keep", choices=["black", "white", "both"], default="black",
+        help="which matte to write: black (default), white, or both "
+        "(black/white are exact alpha inverses)",
     )
     p.add_argument(
         "-o", "--out", default=".",

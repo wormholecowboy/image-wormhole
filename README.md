@@ -41,10 +41,11 @@ iw threshold path/to/photo.jpg      # transparent black+white mattes per thresho
 iw adaptive path/to/photo.jpg       # grid of local adaptive-threshold variants
 ```
 
-`threshold` sweeps a binary threshold across ~20 points. Each threshold emits
-**two transparent RGBA mattes** — one keeping the black pixels, one keeping the
-white — with the other side fully transparent, ready to drop into a compositing
-tool. Files land in `<stem>/threshold/<stem>_t###_<side>.png`.
+`threshold` sweeps a binary threshold across ~20 points. Each threshold emits a
+**transparent RGBA matte** — the kept side opaque, the other fully transparent —
+ready to drop into a compositing tool. Defaults to the **black** side; the white
+matte is its exact alpha inverse, so `--keep white|both` covers the rest. Files
+land in `<stem>/threshold/<stem>_t###_<side>.png`.
 
 `adaptive` thresholds each pixel against its local neighborhood instead of one
 global value, so uneven lighting is stripped and micro-texture / granular detail
