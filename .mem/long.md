@@ -10,7 +10,7 @@
 - [libs] OpenCV (opencv-python), NumPy, Pillow (PIL), Wand (ImageMagick)
 - [output] variants auto-organized into a structured folder layout as created
 - [output-layout] <source-stem>/<technique>/<stem>_<tag>.png; threshold tag = t### (zero-padded threshold value). Default out_root = "." (cwd, not "iw/") since 2026-07-19. No iw/ prefix.
-- [arch] Extraction is now DEFAULT post-step of threshold (not a standalone command). Writes both black+white transparent RGBA mattes automatically. Shared logic in src/image_wormhole/extract.py (to_rgba). adaptive still emits OPAQUE binary — auto-extract scoped to threshold only; extend to adaptive is a candidate.
+- [arch] Extraction is now DEFAULT post-step of threshold (not a standalone command). Writes a SINGLE transparent RGBA matte per threshold — black by default, `--keep black|white|both` to change (black/white are exact alpha inverses, so both is rarely needed). Shared logic in src/image_wormhole/extract.py (to_rgba). adaptive still emits OPAQUE binary — auto-extract scoped to threshold only; extend to adaptive is a candidate.
 - [arch] Shared pre-processing pattern: src/image_wormhole/preprocess.py holds cross-op flags (blur now) applied to gray right after load; each op calls add_blur_arg(p) in add_parser and apply_blur/blur_tag in run. Home for future shared pre-steps.
 
 ## decisions
